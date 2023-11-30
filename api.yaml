@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: Institutions WebAPI
+  version: 1.0.0
+servers:
+  - url: '{scheme}://{authority}:{port}'
+    variables:
+      authority:
+        default: ""
+      port:
+        enum:
+          - '3000'
+        default: '3000'
+      scheme:
+        default: "http"
+tags:
+  - name: app
+    description: Used by institutions app
+paths:
+  /institutions:
+    get:
+      summary: Fetch all institutions
+      tags: 
+        - Institution
+      responses:
+        '200':
+          description: Institutions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Institution'
+    post:
+      summary: Register a new institution
+      tags:
+        - app
+        - Institution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Institution'
+      responses:
+        '201':
+          description: Institution created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        '409':
+          description: Institution already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  
+  /institutions/{institutionId}:
+    parameters:
+      - name: institutionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Fetch institution's data
+      tags: 
+        - Institution
+      responses:
+        '200':
+          description: Found institution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '404':
+          description: Institution not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    post:
+      summary: Update institution's data
+      tags: 
+        - Institution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Institution'
+      responses:
+        '200':
+          description: Institution updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Institution'
+        '404':
+          description: Institution not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+                
+  /trainingOffer:
+    post:
+      summary: Register a new training offer
+      tags:
+        - app
+        - Institution
+        - TrainingOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingOffer'
+      responses:
+        '201':
+          description: Training offer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        '409':
+          description: Training offer already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /trainingOffer/{trainingOfferId}:
+    parameters:
+      - name: trainingOfferId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Fetch training offer data
+      tags: 
+        - Institution
+        - TrainingOffer
+      responses:
+        '200':
+          description: Found training offer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingOffer'
+        '404':
+          description: training offer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+    post:
+      summary: Update training offer data
+      tags: 
+        - Institution
+        - TrainingOffer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingOffer'
+      responses:
+        '200':
+          description: Training offer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingOffer'
+        '404':
+          description: Training offer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotFound'
+components:
+  schemas:
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+          
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: A human readable error message
+          example: application not found
+      required: [ message ]
+      
+    ErrorNotFound:
+      allOf:
+        - $ref: '#/components/schemas/Error'
+        - type: object
+          properties:
+            resource:
+             type: string
+             description: the resource whose reference was not found
+             example: application
+             
+    Institution:
+      allOf:
+        - $ref: '#/components/schemas/Entity'
+        - type: object
+          properties:
+            cue:
+              type: string
+              example: '12345678'
+            type:
+              type: string
+              enum:
+                - Secondary (Technical)
+                - Secondary (EPS)
+                - Vocational Training
+                - Higher Technical
+            number:
+              type: string
+              nullable: true
+            name:
+              type: string
+            contact:
+              type: string
+              nullable: true
+              
+    TrainingOffer:
+      allOf:
+          - $ref: '#/components/schemas/Entity'
+          - type: object
+            properties:
+              Name:
+                type: string
+              Capabilities:
+                type: string
