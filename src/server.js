@@ -4,6 +4,7 @@ import { runRouter } from "./router/router.js"
 const {
     HOST = 'localhost',
     PORT = '8080',
+    SCHEME = 'http'
 } = process.env
 
 export const runServer = () => {
@@ -12,6 +13,6 @@ export const runServer = () => {
     })
 
     server.listen( parseInt( PORT ), HOST, () =>{ 
-        console.log( 'running...' )
+        console.log( `running at: ${SCHEME}://${HOST}:${PORT}` )
     })
 }
