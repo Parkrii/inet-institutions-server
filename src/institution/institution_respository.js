@@ -2,7 +2,7 @@ import { Table } from '../lib/database.js'
 import { KeysMapper } from '../keys_mapper.js'
 import { Institution } from './institution.js'
 
-const TABLE_NAME = 'institution'
+const TABLE_NAME = 'institutions'
 
 const mapper = new KeysMapper({
     //  attribute   db column

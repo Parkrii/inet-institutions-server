@@ -45,18 +45,6 @@ export const getAll = async ( ) => {
     return institutions
 }
 
-/*export const trainingOffer = ( { id } ) => {
-
-    let institution = await fetchInstitution( { id } )
-
-    console.log( 'Institution created', { institution } )
-    saveInstitution( institution ).then( () => {
-        console.log( 'Institution saved', { institution } )
-    } )
-    return institution
-}*/
-
-
 /**
  * @param { {
  *   id: string,
@@ -68,7 +56,7 @@ export const getAll = async ( ) => {
  * } }
  */
 export function Institution( { id, cue, type, number, name, contact } ) {
-    this.id     = id
+    this.id      = id
     this.cue     = cue
     this.type    = type
     this.number  = number
